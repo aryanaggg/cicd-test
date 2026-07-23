@@ -1,0 +1,7 @@
+# Placeholder.
+# We'll build this workflow together in the next step.
+name: CI
+
+on:
+  push:
+  pull_request:
