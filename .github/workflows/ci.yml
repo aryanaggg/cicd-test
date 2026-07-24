@@ -31,3 +31,7 @@ jobs:
       - name: Run Tests
         run: |
           pytest
+        
+      - name: Run build docker
+        run: |
+          docker build -t cicd-demo .
