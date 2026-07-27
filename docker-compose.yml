@@ -1,0 +1,11 @@
+services:
+  app:
+    image: ghcr.io/aryanaggg/cicd-demo:latest
+    container_name: cicd-demo
+    ports:
+      - "5000:5000"
+      # host -> container
+    restart: unless-stopped
+  
+  # redis:
+  #   image: redis:7-alpha
