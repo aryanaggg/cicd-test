@@ -69,7 +69,7 @@ jobs:
     steps:
       - name: Test SSH connection
         run: |
-          mdir -p ~/.ssh
+          mkdir -p ~/.ssh
           echo "${{ secrets.SERVER_SH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
