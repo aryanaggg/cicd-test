@@ -61,4 +61,22 @@ jobs:
         run: |
           docker push ghcr.io/aryanaggg/cicd-demo:latest
           docker push ghcr.io/aryanaggg/cicd-demo:${{ github.sha }}
+  
+  ssh-test:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test SSH connection
+        run: |
+          mdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i ~/.ssh/deploy_key \
+            -p ${{ secrets.SERVER_PORT }} \
+            deploy@${{ secrets.SERVER_HOST }} \
+            "whoami"
           
