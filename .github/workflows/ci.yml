@@ -88,5 +88,5 @@ jobs:
             -i ~/.ssh/deploy_key \
             -p ${{ secrets.SERVER_PORT }} \
             deploy@${{ secrets.SERVER_HOST }} \
-            "whoami"
+            "cd /opt/cicd-demo && docker compose pull && docker compose up -d"
           
