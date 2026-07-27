@@ -50,7 +50,7 @@ jobs:
           # docker build -t cicd-demo .
           # docker build -t ghcr.io/aryanaggg/cicd-demo:latest .
 
-          # this builds one image and copies it with two names
+          # this builds one image and copies it with two tags
           docker build \
             -t ghcr.io/aryanaggg/cicd-demo:latest \
             -t ghcr.io/aryanaggg/cicd-demo:${{ github.sha }} \
