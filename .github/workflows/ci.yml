@@ -61,4 +61,32 @@ jobs:
         run: |
           docker push ghcr.io/aryanaggg/cicd-demo:latest
           docker push ghcr.io/aryanaggg/cicd-demo:${{ github.sha }}
+  
+  
+  
+  ssh-test:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show runner network info
+        run: |
+          echo "Runner:"
+          echo "OS: $RUNNER_OS"
+          echo "Name: $RUNNER_NAME"
+          echo "Public IP:"
+          curl -s https://api.ipify.org
+          echo
+      - name: Test SSH connection
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -i ~/.ssh/deploy_key \
+            -p ${{ secrets.SERVER_PORT }} \
+            deploy@${{ secrets.SERVER_HOST }} \
+            "cd /opt/cicd-demo && docker compose pull && docker compose up -d"
           

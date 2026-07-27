@@ -1,6 +1,7 @@
 services:
   app:
     image: ghcr.io/aryanaggg/cicd-demo:latest
+    # image: ghcr.io/aryanaggg/cicd-demo:df34ac14ce54b6e646eb33c41f86ea19df9cea2b
     container_name: cicd-demo
     ports:
       - "5000:5000"
