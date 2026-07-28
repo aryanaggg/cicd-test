@@ -81,9 +81,40 @@ jobs:
             -i ~/.ssh/deploy_key \
             -p ${{ secrets.SERVER_PORT }} \
             deploy@${{ secrets.SERVER_HOST }} \
-            "cd /opt/cicd-demo && \
-            echo "IMAGE_TAG=${{ github.sha }}" > .env && \
-            docker compose pull && \
-            docker compose up -d
-            sleep 3
-            curl --fail http://localhost:5000/health"
+            'cd /opt/cicd-demo || exit 1
+
+            OLD_TAG=$(grep "^IMAGE_TAG=" .env | cut -d= -f2)
+            NEW_TAG="${{ github.sha }}"
+
+            echo "Current version: $OLD_TAG"
+            echo "Deploying version: $NEW_TAG"
+
+            echo "IMAGE_TAG=$NEW_TAG" > .env
+
+            if docker compose pull &&
+              docker compose up -d &&
+              sleep 3 &&
+              curl --fail http://localhost:5000/health
+            then
+              echo
+              echo "Deployment successful: $NEW_TAG"
+            else
+              echo
+              echo "Deployment failed. Rolling back to: $OLD_TAG"
+
+              echo "IMAGE_TAG=$OLD_TAG" > .env
+
+              if docker compose pull &&
+                docker compose up -d &&
+                sleep 3 &&
+                curl --fail http://localhost:5000/health
+              then
+                echo
+                echo "Rollback completed: $OLD_TAG"
+              else
+                echo
+                echo "ROLLBACK FAILED"
+              fi
+
+              exit 1
+            fi'
