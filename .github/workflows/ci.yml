@@ -64,29 +64,25 @@ jobs:
   
   
   
-  ssh-test:
+  deploy:
     needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Show runner network info
-        run: |
-          echo "Runner:"
-          echo "OS: $RUNNER_OS"
-          echo "Name: $RUNNER_NAME"
-          echo "Public IP:"
-          curl -s https://api.ipify.org
-          echo
-      - name: Test SSH connection
+      - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
+      - name: Deploy
+        run: |
           ssh \
             -o StrictHostKeyChecking=no \
             -i ~/.ssh/deploy_key \
             -p ${{ secrets.SERVER_PORT }} \
             deploy@${{ secrets.SERVER_HOST }} \
-            "cd /opt/cicd-demo && docker compose pull && docker compose up -d"
-          
+            "cd /opt/cicd-demo && \
+            IMAGE_TAG=${{ github.sha }} docker compose pull && \
+            IMAGE_TAG=${{ github.sha }} docker compose up -d"
