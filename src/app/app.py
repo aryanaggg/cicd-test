@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.get("/")
 def home():
-    return {"message": "Hello, We are LIVE!"}
+    return {"message": "Hello, We are LIVE! (with sha)"}
 
 
 @app.get("/health")

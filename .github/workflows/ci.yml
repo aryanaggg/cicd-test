@@ -88,5 +88,7 @@ jobs:
             -i ~/.ssh/deploy_key \
             -p ${{ secrets.SERVER_PORT }} \
             deploy@${{ secrets.SERVER_HOST }} \
-            "cd /opt/cicd-demo && docker compose pull && docker compose up -d"
+            "cd /opt/cicd-demo && \
+            IMAGE_TAG=${{ github.sha }} docker compose pull && \
+            IMAGE_TAG=${{ github.sha }} docker compose up -d"
           
