@@ -10,7 +10,7 @@ def home():
 
 @app.get("/health")
 def health():
-    return {"message": "Healthy"}
+    return {"status": "ok"}, 200
 
 
 if __name__ == "__main__":

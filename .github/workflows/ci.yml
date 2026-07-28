@@ -61,9 +61,7 @@ jobs:
         run: |
           docker push ghcr.io/aryanaggg/cicd-demo:latest
           docker push ghcr.io/aryanaggg/cicd-demo:${{ github.sha }}
-  
-  
-  
+
   deploy:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -86,4 +84,6 @@ jobs:
             "cd /opt/cicd-demo && \
             echo "IMAGE_TAG=${{ github.sha }}" > .env && \
             docker compose pull && \
-            docker compose up -d"
+            docker compose up -d
+            sleep 3
+            curl --fail http://localhost:5000/health"
